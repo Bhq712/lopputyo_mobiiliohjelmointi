@@ -1,10 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Image, ScrollView } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import HomeStack from './HomeStack';
 import Favorites from './Favorites';
@@ -15,44 +15,76 @@ import Login from './Login';
 const Drawer = createDrawerNavigator();
 
 export default function App() {
-
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
-  
-  if (!isLoggedIn) {
-  return (
-    <Login 
-      onLogin={(username) => {
-        setUser(username);
-        setIsLoggedIn(true);
-      }} 
-    />
-  );
-}  
+  const [loading, setLoading] = useState(true);
 
- return (
-  <SafeAreaProvider>
-    <SafeAreaView style={styles.container}>
-      <NavigationContainer>
-        <Drawer.Navigator initialRouteName="Home">
-          <Drawer.Screen name="Home" component={HomeStack} />
-          <Drawer.Screen name="Favorites" component={Favorites} />
-          <Drawer.Screen name="Reviewed programs" component={Reviewed} />
-          <Drawer.Screen name="Profile">
-            {() => <Profile user={user} onLogout={() => setIsLoggedIn(false)} />}
-          </Drawer.Screen>
-        </Drawer.Navigator>
-      </NavigationContainer>
-      <StatusBar style='auto' />
-    </SafeAreaView>
-  </SafeAreaProvider>
- );
-};
+  
+  useEffect(() => {
+    const checkLogin = async () => {
+      const savedUser = await AsyncStorage.getItem('user');
+
+      if (savedUser) {
+        setUser(savedUser);
+        setIsLoggedIn(true);
+      }
+
+      setLoading(false);
+    };
+
+    checkLogin();
+  }, []);
+
+ 
+  if (loading) {
+    return null;
+  }
+
+ 
+  if (!isLoggedIn) {
+    return (
+      <Login
+        onLogin={async (username) => {
+          setUser(username);
+          setIsLoggedIn(true);
+
+          
+          await AsyncStorage.setItem('user', username);
+        }}
+      />
+    );
+  }
+
+  return (
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.container}>
+        <NavigationContainer>
+          <Drawer.Navigator initialRouteName="Home">
+            <Drawer.Screen name="Home" component={HomeStack} />
+            <Drawer.Screen name="Favorites" component={Favorites} />
+            <Drawer.Screen name="Reviewed programs" component={Reviewed} />
+            <Drawer.Screen name="Profile">
+              {() => (
+                <Profile
+                  user={user}
+                  onLogout={async () => {
+                    await AsyncStorage.removeItem('user');
+                    setIsLoggedIn(false);
+                  }}
+                />
+              )}
+            </Drawer.Screen>
+          </Drawer.Navigator>
+        </NavigationContainer>
+        <StatusBar style="auto" />
+      </SafeAreaView>
+    </SafeAreaProvider>
+  );
+}
 
 const styles = StyleSheet.create({
-   container: {
+  container: {
     flex: 1,
-    backgroundColor: '#ffff',
-    justifyContent: 'center',
+    backgroundColor: '#fff',
   },
 });
