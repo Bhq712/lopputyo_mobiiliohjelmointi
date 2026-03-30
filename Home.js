@@ -38,7 +38,7 @@ export default function Home({ navigation }) {
     <View style={styles.container}>
       <TextInput
         style={styles.input}
-        placeholder="Search..."
+        placeholder="Search programs..."
         value={keyword}
         onChangeText={text => setKeyword(text)}
       />
