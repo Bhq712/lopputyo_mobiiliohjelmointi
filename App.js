@@ -12,6 +12,8 @@ import Reviewed from './Reviewed';
 import Profile from './Profile';
 import Login from './Login';
 
+import { FavoritesProvider } from "./FavoritesContext";
+
 const Drawer = createDrawerNavigator();
 
 export default function App() {
@@ -58,6 +60,7 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
+        <FavoritesProvider>
         <NavigationContainer>
           <Drawer.Navigator initialRouteName="Home">
             <Drawer.Screen name="Home" component={HomeStack} />
@@ -76,6 +79,7 @@ export default function App() {
             </Drawer.Screen>
           </Drawer.Navigator>
         </NavigationContainer>
+        </FavoritesProvider>
         <StatusBar style="auto" />
       </SafeAreaView>
     </SafeAreaProvider>
