@@ -119,7 +119,7 @@ export default function Profile({ user, onLogout }) {
         )}
       </View>
       <Text style={{ fontSize: 18, marginBottom: 10 }}>{user}</Text>
-      <Button title="Logout" onPress={handleLogout} />
+      <Button title="Log out" onPress={handleLogout} />
     </View>
   );
 }
