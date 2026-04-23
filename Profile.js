@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, Image, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, Button, Image, StyleSheet, TouchableOpacity, Alert, TextInput } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -151,5 +151,5 @@ const styles = StyleSheet.create({
     backgroundColor: 'red',
     padding: 6,
     borderRadius: 20,
-  }
+  },
 });
