@@ -25,7 +25,7 @@ export const FavoritesProvider = ({ children }) => {
     //lisää suosikki
     const addToFavorites = (movie) => {
         setFavorites((prev) => {
-            if (prev.find((m) => m.imdbID === movie.indbID)) {
+            if (prev.find((m) => m.imdbID === movie.imdbID)) {
                 return prev;
             }
 

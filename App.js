@@ -13,6 +13,7 @@ import Profile from './Profile';
 import Login from './Login';
 
 import { FavoritesProvider } from "./FavoritesContext";
+import { ReviewsProvider } from './ReviewsContext';
 
 const Drawer = createDrawerNavigator();
 
@@ -60,6 +61,7 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
+        <ReviewsProvider>
         <FavoritesProvider>
         <NavigationContainer>
           <Drawer.Navigator initialRouteName="Home">
@@ -80,6 +82,7 @@ export default function App() {
           </Drawer.Navigator>
         </NavigationContainer>
         </FavoritesProvider>
+        </ReviewsProvider>
         <StatusBar style="auto" />
       </SafeAreaView>
     </SafeAreaProvider>

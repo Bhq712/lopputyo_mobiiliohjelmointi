@@ -94,8 +94,6 @@ export default function Profile({ user, onLogout }) {
 
   return (
     <View style={styles.container}>
-      <Text style={{ fontSize: 18, marginBottom: 10 }}>Your profile</Text>
-      
       {/* 🔹 Profiilikuva */}
       <View style={styles.imageContainer}>
         {profileImage ? (
@@ -108,13 +106,13 @@ export default function Profile({ user, onLogout }) {
 
         {/* 🔹 Edit-nappi */}
         <TouchableOpacity style={styles.editButton} onPress={handleEdit}>
-          <MaterialIcons name="edit" size={24} color="white" />
+          <MaterialIcons name="edit" size={20} color="white" />
         </TouchableOpacity>
 
         {/* 🔹 Delete-nappi näkyy vain jos profiilikuva */}
         {profileImage && (
           <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
-            <MaterialIcons name="delete" size={20} color="white" />
+            <MaterialIcons name="delete" size={18} color="white" />
           </TouchableOpacity>
         )}
       </View>

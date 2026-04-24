@@ -1,9 +1,22 @@
-import { useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, ActivityIndicator, ScrollView, Button, TouchableOpacity} from 'react-native';
-import Feather from '@expo/vector-icons/Feather';
-import { useContext } from "react";
-import { FavoritesContext } from "./FavoritesContext";
+import { useState, useEffect, useContext } from 'react';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  ActivityIndicator,
+  ScrollView,
+  Button,
+  TouchableOpacity,
+  Alert,
+  Modal,
+  TextInput
+} from 'react-native';
+
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+
+import { FavoritesContext } from "./FavoritesContext";
+import { ReviewsContext } from "./ReviewsContext";
 
 export default function ProgramDetails({ route }) {
   const { movie } = route.params;
@@ -11,19 +24,17 @@ export default function ProgramDetails({ route }) {
   const [details, setDetails] = useState(null);
   const [isFetching, setIsFetching] = useState(true);
 
+  const [showReviewModal, setShowReviewModal] = useState(false);
+  const [reviewText, setReviewText] = useState("");
+
   const apiKey = "2a702e03";
 
-  // ⭐ context
   const { favorites, toggleFavorite } = useContext(FavoritesContext);
+  const { reviews, addReview } = useContext(ReviewsContext);
 
   useEffect(() => {
-    fetch(
-      "https://www.omdbapi.com/?i=" + movie.imdbID + "&apikey=" + apiKey
-    )
-      .then((response) => {
-        if (!response.ok) throw new Error("Error when fetching details");
-        return response.json();
-      })
+    fetch("https://www.omdbapi.com/?i=" + movie.imdbID + "&apikey=" + apiKey)
+      .then((res) => res.json())
       .then((data) => setDetails(data))
       .catch((err) => console.error(err))
       .finally(() => setIsFetching(false));
@@ -31,86 +42,133 @@ export default function ProgramDetails({ route }) {
 
   if (isFetching) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <View style={styles.center}>
         <ActivityIndicator size="large" />
       </View>
     );
   }
 
-  if (!details) {
-    return (
-      <View style={styles.container}>
-        <Text>Failed to load details.</Text>
-      </View>
-    );
-  }
+  const isFav = favorites.some(m => m.imdbID === details.imdbID);
 
-  // ⭐ tarkista onko suosikki
-  const isFav = favorites.some(
-    (m) => m.imdbID === details.imdbID
+  const alreadyReviewed = reviews.some(
+    r => r.imdbID === details.imdbID
   );
 
-  // ⭐ toggle
   const handleToggleFavorite = () => {
     toggleFavorite(details);
   };
 
-  const handleWriteReview = () => {};
+  // ❗ ALERT LOGIC (ei edit täällä)
+  const handleWriteReview = () => {
+    if (alreadyReviewed) {
+      Alert.alert(
+        "Already reviewed",
+        "You have already reviewed this program!",
+        [{ text: "OK" }]
+      );
+      return;
+    }
+
+    setShowReviewModal(true);
+  };
+
+  const handleSaveReview = () => {
+    if (!reviewText.trim()) return;
+
+    addReview(details, reviewText);
+    setReviewText("");
+    setShowReviewModal(false);
+  };
+
+  const handleCancel = () => {
+    setReviewText("");
+    setShowReviewModal(false);
+  };
 
   return (
-    <ScrollView
-      style={styles.scrollContainer}
-      contentContainerStyle={{ paddingBottom: 20 }}
-    >
-      <Text style={styles.title}>{details.Title}</Text>
-      <Text>Year: {details.Year}</Text>
-      <Text>Actors: {details.Actors}</Text>
+    <>
+      <ScrollView style={styles.container}>
+        <Text style={styles.title}>{details.Title}</Text>
+        <Text>Year: {details.Year}</Text>
+        <Text>Actors: {details.Actors}</Text>
 
-      <View style={styles.posterRow}>
-        <Image source={{ uri: details.Poster }} style={styles.poster} />
+        <View style={styles.row}>
+          <Image source={{ uri: details.Poster }} style={styles.poster} />
 
-        <View style={styles.iconReview}>
-          {/* ⭐ FAVORITE BUTTON */}
-           <TouchableOpacity onPress={handleToggleFavorite}>
-            <FontAwesome
-              name={isFav ? "star" : "star-o"}
-              size={30}
-              color="black"
-              style={{ marginBottom: 15 }}
-            />
-          </TouchableOpacity>
+          <View style={styles.icons}>
+            <TouchableOpacity onPress={handleToggleFavorite}>
+              <FontAwesome
+                name={isFav ? "star" : "star-o"}
+                size={30}
+              />
+            </TouchableOpacity>
 
-          <Button title="Review" onPress={handleWriteReview} />
+            <View style={{ marginTop: 25 }}>
+              <Button title="Review" onPress={handleWriteReview} />
+            </View>
+          </View>
         </View>
-      </View>
 
-      <Text style={styles.plot}>Plot: {details.Plot}</Text>
-    </ScrollView>
+        <Text style={styles.plot}>{details.Plot}</Text>
+      </ScrollView>
+
+      {/* MODAL */}
+      <Modal visible={showReviewModal} transparent animationType="slide">
+        <View style={styles.modalBg}>
+          <View style={styles.modalBox}>
+            <Text style={styles.modalTitle}>Write review</Text>
+
+            <TextInput
+              value={reviewText}
+              onChangeText={setReviewText}
+              multiline
+              style={styles.input}
+            />
+
+            <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+              <Button title="Cancel" onPress={handleCancel} />
+              <Button title="Save" onPress={handleSaveReview} />
+            </View>
+          </View>
+        </View>
+      </Modal>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  scrollContainer: { flex: 1, padding: 20 },
-  title: { fontSize: 22, fontWeight: "bold", marginBottom: 10 },
+  container: { flex: 1, padding: 20 },
+  center: { flex: 1, justifyContent: "center", alignItems: "center" },
+  title: { fontSize: 22, fontWeight: "bold" },
+  row: { flexDirection: "row" },
+  poster: { width: 200, height: 300 },
+  icons: { marginLeft: 15, marginTop: 40 },
+  plot: { marginTop: 10 },
 
-  posterRow: {
-    flexDirection: "row",
-    alignItems: "flex-start",
+  modalBg: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "center",
+    alignItems: "center"
   },
 
-  iconReview: {
-    marginLeft: 15,
-    marginTop: 40,
+  modalBox: {
+    backgroundColor: "white",
+    padding: 20,
+    width: "80%",
+    borderRadius: 10
   },
 
-  poster: {
-    width: 200,
-    height: 300,
-    marginVertical: 10,
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10
   },
 
-  plot: {
-    marginTop: 10,
-    fontSize: 16,
-  },
+  input: {
+    borderWidth: 1,
+    padding: 10,
+    minHeight: 80,
+    marginBottom: 10
+  }
 });

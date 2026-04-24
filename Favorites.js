@@ -9,7 +9,7 @@ export default function Favorites() {
     return (
         <View style={{ flex: 1, padding: 10 }}>
             {favorites.length === 0 ? (
-                <Text>Ei suosikkeja vielä</Text>
+                <Text>No favorites yet.</Text>
             ) : (
                 <FlatList
                     data={favorites}
