@@ -42,10 +42,10 @@ export const FavoritesProvider = ({ children }) => {
             let updated;
 
             if (exists) {
-                // 🗑️ poista
+                // poista
                 updated = prev.filter((m) => m.imdbID !== movie.imdbID);
             } else {
-                // ⭐ lisää
+                // lisää
                 updated = [...prev, movie];
             }
 

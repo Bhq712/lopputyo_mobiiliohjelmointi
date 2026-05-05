@@ -6,7 +6,7 @@ export const ReviewsContext = createContext();
 export const ReviewsProvider = ({ children }) => {
   const [reviews, setReviews] = useState([]);
 
-  // 📥 load
+  // lataa arvostelut
   useEffect(() => {
     const loadReviews = async () => {
       const data = await AsyncStorage.getItem("reviews");
@@ -17,12 +17,12 @@ export const ReviewsProvider = ({ children }) => {
     loadReviews();
   }, []);
 
-  // 💾 save
+  // tallenna
   const saveReviews = async (list) => {
     await AsyncStorage.setItem("reviews", JSON.stringify(list));
   };
 
-  // ➕ add
+  // lisää arvostelu
   const addReview = (movie, text) => {
     setReviews((prev) => {
       const newReview = {
@@ -38,7 +38,7 @@ export const ReviewsProvider = ({ children }) => {
     });
   };
 
-  // ✏️ update
+  // päivitä arvostelu
   const updateReview = (id, newText) => {
     setReviews((prev) => {
       const updated = prev.map((r) =>
@@ -49,7 +49,7 @@ export const ReviewsProvider = ({ children }) => {
     });
   };
 
-  // 🗑️ remove
+  // poista arvostelu
   const removeReview = (id) => {
     setReviews((prev) => {
       const updated = prev.filter((r) => r.imdbID !== id);

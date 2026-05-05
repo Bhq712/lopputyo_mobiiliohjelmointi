@@ -7,7 +7,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 export default function Profile({ user, onLogout }) {
   const [profileImage, setProfileImage] = useState(null);
 
-  // 🔹 Haetaan tallennettu profiilikuva
+  // Haetaan tallennettu profiilikuva
   useEffect(() => {
     const loadImage = async () => {
       const savedImage = await AsyncStorage.getItem('profileImage');
@@ -16,21 +16,21 @@ export default function Profile({ user, onLogout }) {
     loadImage();
   }, []);
 
-  // 🔹 Logout
+  //Kirjaudu ulos
   const handleLogout = async () => {
     await AsyncStorage.removeItem('user');
     onLogout();
   };
 
-  // 🔹 Edit profiilikuva
+  //Editoi profiilikuvaa
   const handleEdit = async () => {
     Alert.alert(
       "Edit Profile Picture",
       "Choose an option",
       [
+        { text: "Cancel", style: 'cancel' },
         { text: "Camera", onPress: () => pickImage('camera') },
-        { text: "Gallery", onPress: () => pickImage('gallery') },
-        { text: "Cancel", style: 'cancel' }
+        { text: "Gallery", onPress: () => pickImage('gallery') }
       ]
     );
   };
@@ -62,7 +62,6 @@ export default function Profile({ user, onLogout }) {
       });
     }
 
-    // tukee uusien Expo-versioiden formaattia
     let uri;
     if (!result.cancelled) {
       uri = result.uri || (result.assets && result.assets[0].uri);
@@ -76,17 +75,18 @@ export default function Profile({ user, onLogout }) {
     }
   };
 
-  // 🔹 Delete profiilikuva
+  //Poista profiilikuva
   const handleDelete = () => {
     Alert.alert(
       "Delete Profile Picture",
       "Are you sure you want to delete profile picture?",
       [
         { text: "No", style: "cancel" },
-        { text: "Yes", style: "destructive", onPress: async () => {
+        {
+          text: "Yes", style: "destructive", onPress: async () => {
             setProfileImage(null);
             await AsyncStorage.removeItem('profileImage');
-          } 
+          }
         }
       ]
     );
@@ -94,7 +94,7 @@ export default function Profile({ user, onLogout }) {
 
   return (
     <View style={styles.container}>
-      {/* 🔹 Profiilikuva */}
+      {/*Profiilikuva */}
       <View style={styles.imageContainer}>
         {profileImage ? (
           <Image source={{ uri: profileImage }} style={styles.profileImage} />
@@ -104,12 +104,12 @@ export default function Profile({ user, onLogout }) {
           </View>
         )}
 
-        {/* 🔹 Edit-nappi */}
+        {/*Edit-nappi */}
         <TouchableOpacity style={styles.editButton} onPress={handleEdit}>
           <MaterialIcons name="edit" size={20} color="white" />
         </TouchableOpacity>
 
-        {/* 🔹 Delete-nappi näkyy vain jos profiilikuva */}
+        {/* Delete-nappi näkyy vain, jos profiilikuva on jo */}
         {profileImage && (
           <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
             <MaterialIcons name="delete" size={18} color="white" />
@@ -117,7 +117,7 @@ export default function Profile({ user, onLogout }) {
         )}
       </View>
       <Text style={{ fontSize: 18, marginBottom: 10 }}>{user}</Text>
-      <Button title="Log out" onPress={handleLogout} />
+      <Button title="Log out" onPress={handleLogout} color="purple" />
     </View>
   );
 }
@@ -126,19 +126,19 @@ const styles = StyleSheet.create({
   container: { flex: 1, padding: 20, alignItems: 'center', justifyContent: 'flex-start' },
   imageContainer: { marginVertical: 20, position: 'relative' },
   profileImage: { width: 120, height: 120, borderRadius: 60 },
-  placeholder: { 
-    width: 120, 
-    height: 120, 
-    borderRadius: 60, 
-    backgroundColor: '#ddd', 
-    alignItems: 'center', 
-    justifyContent: 'center' 
+  placeholder: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: '#ddd',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   editButton: {
     position: 'absolute',
     bottom: 0,
     right: 0,
-    backgroundColor: 'purple',
+    backgroundColor: 'violet',
     padding: 6,
     borderRadius: 20,
   },
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     right: 0,
-    backgroundColor: 'red',
+    backgroundColor: 'purple',
     padding: 6,
     borderRadius: 20,
   },

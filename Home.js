@@ -42,7 +42,7 @@ export default function Home({ navigation }) {
         value={keyword}
         onChangeText={text => setKeyword(text)}
       />
-      <Button title="Fetch" onPress={handleFetch} color="purple" disabled={isFetching} />
+      <Button title="Fetch" onPress={handleFetch} color="violet" disabled={isFetching} />
 
       {isFetching ? (
         <ActivityIndicator size="large" style={{ marginTop: 20 }} />

@@ -2,18 +2,18 @@ import React, { useState } from 'react';
 import { View, TextInput, Button, StyleSheet, Alert, Text } from 'react-native';
 
 export default function Login({ onLogin }) {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
-    const handleLogin = () => {
-        if (username === "Admin" && password === "1234") {
-            onLogin(username);
-        } else {
-            Alert.alert("Wrong username or password");
-        }
-    };
+  const handleLogin = () => {
+    if (username === "Admin" && password === "1234") {
+      onLogin(username);
+    } else {
+      Alert.alert("Wrong username or password");
+    }
+  };
 
-    return (
+  return (
     <View style={styles.container}>
       <Text style={{ fontSize: 20, marginBottom: 20 }}>Login</Text>
 
@@ -32,7 +32,7 @@ export default function Login({ onLogin }) {
         onChangeText={setPassword}
       />
 
-      <Button title="Login" onPress={handleLogin} />
+      <Button title="Login" onPress={handleLogin} color="violet" />
     </View>
   );
 }

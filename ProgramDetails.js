@@ -58,7 +58,7 @@ export default function ProgramDetails({ route }) {
     toggleFavorite(details);
   };
 
-  // ❗ ALERT LOGIC (ei edit täällä)
+  //jos arvosteltu jo
   const handleWriteReview = () => {
     if (alreadyReviewed) {
       Alert.alert(
@@ -104,7 +104,7 @@ export default function ProgramDetails({ route }) {
             </TouchableOpacity>
 
             <View style={{ marginTop: 25 }}>
-              <Button title="Review" onPress={handleWriteReview} />
+              <Button title="Review" onPress={handleWriteReview} color="violet" />
             </View>
           </View>
         </View>
@@ -112,11 +112,11 @@ export default function ProgramDetails({ route }) {
         <Text style={styles.plot}>{details.Plot}</Text>
       </ScrollView>
 
-      {/* MODAL */}
+      {/* modal */}
       <Modal visible={showReviewModal} transparent animationType="slide">
         <View style={styles.modalBg}>
           <View style={styles.modalBox}>
-            <Text style={styles.modalTitle}>Write review</Text>
+            <Text style={styles.modalTitle}>Write a review.</Text>
 
             <TextInput
               value={reviewText}
@@ -126,8 +126,8 @@ export default function ProgramDetails({ route }) {
             />
 
             <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-              <Button title="Cancel" onPress={handleCancel} />
-              <Button title="Save" onPress={handleSaveReview} />
+              <Button title="Cancel" onPress={handleCancel} color="purple" />
+              <Button title="Save" onPress={handleSaveReview} color="violet" />
             </View>
           </View>
         </View>

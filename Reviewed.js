@@ -30,7 +30,7 @@ export default function Reviewed() {
   return (
     <View style={{ flex: 1, padding: 10 }}>
       {reviews.length === 0 ? (
-        <Text>No reviews yet</Text>
+        <Text>No reviews yet.</Text>
       ) : (
         <FlatList
           data={reviews}
@@ -59,7 +59,7 @@ export default function Reviewed() {
         />
       )}
 
-      {/* EDIT MODAL */}
+      {/* editoi modal */}
       <Modal visible={modalVisible} transparent animationType="slide">
         <View style={styles.modalBg}>
           <View style={styles.modalBox}>
@@ -74,8 +74,8 @@ export default function Reviewed() {
             />
 
             <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-              <Button title="Cancel" onPress={handleCancel} />
-              <Button title="Save" onPress={handleSave} />
+              <Button title="Cancel" onPress={handleCancel} color="purple" />
+              <Button title="Save" onPress={handleSave} color="violet" />
             </View>
 
           </View>

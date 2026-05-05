@@ -17,13 +17,13 @@ export default function Favorites() {
                     renderItem={({ item }) => (
                         <View style={{ marginBottom: 20 }}>
 
-                            {/* TITLE + STAR ROW */}
+                            {/* tähti symboli ja title */}
                             <View style={{ flexDirection: "row", alignItems: "center" }}>
                                 <Text style={{ fontSize: 16, fontWeight: "bold" }}>
                                     {item.Title}
                                 </Text>
 
-                                {/* ⭐ REMOVE BUTTON (same toggle) */}
+                                {/* symbolin poisto  */}
                                 <TouchableOpacity
                                     onPress={() => toggleFavorite(item)}
                                     style={{ marginLeft: 12 }}
@@ -32,7 +32,7 @@ export default function Favorites() {
                                 </TouchableOpacity>
                             </View>
 
-                            {/* POSTER */}
+                            {/* posteri */}
                             <Image
                                 source={{ uri: item.Poster }}
                                 style={{
